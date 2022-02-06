@@ -4,8 +4,8 @@
 
 {#if event['Name (common)']}
   <div class="wrapper">
-    <h2>{event['Name (common)']}</h2>
-    <p>{event['Graph years']}</p>
+    <h3>{event['Name (common)']}</h3>
+    <p>{event['Reasons for extinction']}</p>
   </div>
 {/if}
 
