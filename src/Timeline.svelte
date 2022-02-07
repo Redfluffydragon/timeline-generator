@@ -71,12 +71,18 @@
     .then(blob => {
       const downloadLink = document.createElement('a');
   
-      const url = window.URL.createObjectURL(blob);
-      downloadLink.href = url;
-      downloadLink.download = 'timeline.png';
-      downloadLink.click();
-      window.URL.revokeObjectURL(url);
-      downloadLink.remove();
+      try {
+        // This fails when the image is too large
+        const url = window.URL.createObjectURL(blob);
+        downloadLink.href = url;
+        downloadLink.download = 'timeline.png';
+        downloadLink.click();
+        window.URL.revokeObjectURL(url);
+        downloadLink.remove();
+      }
+      catch (err) {
+        alert("Sorry, your timeline is too large to export as an image.");
+      }
     });
   }}>Export as png</button>
 
