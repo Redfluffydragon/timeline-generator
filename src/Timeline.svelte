@@ -6,8 +6,14 @@
   import domtoimage from 'dom-to-image';
 
   $: $events = $events.sort((a, b) => a[$sheetData.dateColumn] - b[$sheetData.dateColumn]);
+
   let sortedEvents = {
     unknown: [],
+  };
+  $: if ($events) {
+    sortedEvents = {
+      unknown: [],
+    }
   };
 
   $: $events.forEach(item => {
