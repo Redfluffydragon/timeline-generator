@@ -22,14 +22,14 @@
   function UploadProcess(fileInput) {
 
     //Validate whether File is valid Excel file.
-    const regex = /^([a-zA-Z0-9\s_\\.\-:])+(.xls|.xlsx)$/;
+    const regex = /^([a-zA-Z0-9\s_\\.\-:])+(.xls|.xlsx|.csv)$/;
     if (regex.test(fileInput.value.toLowerCase())) {
       if (typeof FileReader != "undefined") {
         const reader = new FileReader();
 
         //For Browsers other than IE.
         if (reader.readAsBinaryString) {
-          reader.onload = function (e) {
+          reader.onload = e => {
             GetTableFromExcel(e.target.result);
           };
           reader.readAsBinaryString(fileInput.files[0]);
@@ -45,11 +45,13 @@
           };
           reader.readAsArrayBuffer(fileInput.files[0]);
         }
-      } else {
-        // alert("This browser does not support HTML5.");
       }
-    } else {
-      // alert("Please upload a valid Excel file.");
+      else {
+        alert("This browser does not support HTML5.");
+      }
+    }
+    else if (fileInput.files.length) {
+      alert("Sorry, that file format is not supported.");
     }
   }
 
