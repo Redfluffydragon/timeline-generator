@@ -1,11 +1,13 @@
 <script>
+  import { sheetData } from './stores';
+
   export let event;
 </script>
 
 {#if event['Name (common)']}
   <div class="wrapper">
-    <h3>{event['Name (common)']}</h3>
-    <p>{event['Reasons for extinction']}</p>
+    <h3>{event[$sheetData.titleColumn] || ''}</h3>
+    <p>{event[$sheetData.descriptionColumn] || ''}</p>
   </div>
 {/if}
 

@@ -2,31 +2,31 @@
 	import FileInput from './FileInput.svelte';
   import TimelineEvent from './TimelineEvent.svelte';
   import YearColumn from './YearColumn.svelte';
-  import { events, data } from "./stores";
+  import { events, dateData, sheetData } from "./stores";
   import domtoimage from 'dom-to-image';
 
-  $: $events = $events.sort((a, b) => a['Graph years'] - b['Graph years']);
+  $: $events = $events.sort((a, b) => a[$sheetData.dateColumn] - b[$sheetData.dateColumn]);
   let sortedEvents = {
     unknown: [],
   };
 
   $: $events.forEach(item => {
-    if (isNaN(item['Graph years'])) {
+    if (isNaN(item[$sheetData.dateColumn])) {
       sortedEvents.unknown.push(item);
       return;
     }
     
-    if (!(item['Graph years'] in sortedEvents)) {
-      sortedEvents[item['Graph years']] = [];
+    if (!(item[$sheetData.dateColumn] in sortedEvents)) {
+      sortedEvents[item[$sheetData.dateColumn]] = [];
     }
-    sortedEvents[item['Graph years']].push(item);
+    sortedEvents[item[$sheetData.dateColumn]].push(item);
   });
 
-  $: $data.start = $events.length ? parseInt($events[0]['Graph years']) : 1520;
-  $: $data.end = $events.length ? parseInt($events[$events.findIndex(item => isNaN(item['Graph years'])) - 1]['Graph years']) : 1530;
-  $: $data.range = $data.end - $data.start + 1; // Plus one to include the end year
+  $: $dateData.start = $events.length ? parseInt($events[$events.findIndex(item => !isNaN(item[$sheetData.dateColumn]))][$sheetData.dateColumn]) : 0;
+  $: $dateData.end = $events.length ? parseInt($events[$events.findIndex(item => isNaN(item[$sheetData.dateColumn])) - 1]?.[$sheetData.dateColumn]) : 0;
+  $: $dateData.range = $dateData.end - $dateData.start + 1; // Plus one to include the end year
 
-  $: allYears = Array.from(Array($data.range).keys()).map(year => year + $data.start);
+  $: allYears = Array.from(Array($dateData.range).keys()).map(year => year + $dateData.start);
 
   let timelineNode;
 </script>
@@ -56,7 +56,7 @@
 
 <div class="spacer"></div>
 
-<footer>
+<footer class="centerFlex">
   <FileInput />
   
   <button on:click={() => {
