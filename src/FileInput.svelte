@@ -14,7 +14,6 @@
   // Object.entries(workbook.Sheets[$sheetData.sheet]).filter(cell => cell[0].match(/[A-Z]+1$/))
 
   function UploadProcess(fileInput) {
-
     //Validate whether File is valid Excel file.
     const regex = /^([a-zA-Z0-9\s_\\.\-:])+(.xls|.xlsx|.csv)$/;
     if (regex.test(fileInput.value.toLowerCase())) {
@@ -63,7 +62,6 @@
   }
 </script>
 
-<!-- svelte-ignore missing-declaration -->
 <Modal required={true} bind:open on:close={() => {
   $events = XLSXUtils.sheet_to_json(workbook.Sheets[$sheetData.sheet]);
   }}>
