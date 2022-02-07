@@ -1,23 +1,16 @@
-<svelte:head>
-  <script
-    type="text/javascript"
-    src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.13.5/xlsx.full.min.js"></script>
-  <script
-    type="text/javascript"
-    src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.13.5/jszip.js"></script>
-</svelte:head>
 
 <script>
   import { sheetData, events } from './stores';
   import Modal from './Modal.svelte';
   import { DateTime } from 'luxon';
+  import { read as XLSXRead, utils as XLSXUtils } from "xlsx";
 
   let open = false;
   let badDateCol = false;
   let workbook;
   export let fileChosen = false;
 
-  $: columnHeaders = workbook ? Object.entries(XLSX.utils.sheet_to_json(workbook.Sheets[$sheetData.sheet])[0]) : [];
+  $: columnHeaders = workbook ? Object.entries(XLSXUtils.sheet_to_json(workbook.Sheets[$sheetData.sheet])[0]) : [];
   // Object.entries(workbook.Sheets[$sheetData.sheet]).filter(cell => cell[0].match(/[A-Z]+1$/))
 
   function UploadProcess(fileInput) {
@@ -58,7 +51,7 @@
 
   function GetTableFromExcel(data) {
     //Read the Excel File data in binary
-    workbook = XLSX.read(data, {
+    workbook = XLSXRead(data, {
       type: "binary",
     });
 
@@ -72,7 +65,7 @@
 
 <!-- svelte-ignore missing-declaration -->
 <Modal required={true} bind:open on:close={() => {
-  $events = XLSX.utils.sheet_to_json(workbook.Sheets[$sheetData.sheet]);
+  $events = XLSXUtils.sheet_to_json(workbook.Sheets[$sheetData.sheet]);
   }}>
   <form>
     <h1>Select columns</h1>
@@ -88,7 +81,7 @@
       badDateCol = false;
 
       let hasNumber = 0;
-      for (const i of XLSX.utils.sheet_to_json(workbook.Sheets[$sheetData.sheet])) {
+      for (const i of XLSXUtils.sheet_to_json(workbook.Sheets[$sheetData.sheet])) {
         if (!DateTime.fromISO(i[e.target.value]).invalid) {
           hasNumber++;
         }
