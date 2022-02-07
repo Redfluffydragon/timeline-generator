@@ -10,6 +10,7 @@
 <script>
   import { sheetData, events } from './stores';
   import Modal from './Modal.svelte';
+  import { DateTime } from 'luxon';
 
   let open = false;
   let badDateCol = false;
@@ -86,10 +87,9 @@
     <select id="dateSelect" required bind:value={$sheetData.dateColumn} on:input={e => {
       badDateCol = false;
 
-      // TODO make it work with dates and not just numbers
       let hasNumber = 0;
       for (const i of XLSX.utils.sheet_to_json(workbook.Sheets[$sheetData.sheet])) {
-        if (!isNaN(i[e.target.value])) {
+        if (!DateTime.fromISO(i[e.target.value]).invalid) {
           hasNumber++;
         }
       }
@@ -104,7 +104,7 @@
       {/if}
     </select>
     {#if badDateCol}
-      <p>The date column you selected<br>contains less than two numbers</p>
+      <p>The date column you selected<br>contains fewer than two valid dates</p>
     {/if}
     
     <label for="titleSelect">Column for title</label>
