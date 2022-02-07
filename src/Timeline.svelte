@@ -76,6 +76,7 @@
       downloadLink.download = 'timeline.png';
       downloadLink.click();
       window.URL.revokeObjectURL(url);
+      downloadLink.remove();
     });
   }}>Export as png</button>
 
