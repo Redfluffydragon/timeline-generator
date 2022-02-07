@@ -15,5 +15,6 @@
     background: white;
     box-shadow: 5px 5px 25px black;
     min-width: 20ch;
+    background: var(--card-color);
   }
 </style>

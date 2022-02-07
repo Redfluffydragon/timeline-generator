@@ -15,7 +15,7 @@
     flex-direction: column;
     gap: 2ch;
     width: 25ch;
-    border-top: 2ch solid #000;
+    border-top: 2ch solid var(--line-color);
     padding: 2em 1ch 1ch;
   }
 
@@ -23,6 +23,7 @@
     position: relative;
     margin-bottom: 0;
     text-align: center;
+    color: var(--line-color);
   }
 
   h2::before {
@@ -32,7 +33,7 @@
     left: 50%;
     transform: translateX(-50%);
     content: '';
-    background: black;
+    background: var(--line-color);
     width: 1ch;
     height: 2em;
   }
