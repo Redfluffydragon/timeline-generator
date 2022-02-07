@@ -95,3 +95,9 @@ button:focus {
 .imgBtn svg {
 	height: 100%;
 }
+
+.centerFlex {
+	display: flex;
+	place-content: center;
+	place-items: center;
+}
