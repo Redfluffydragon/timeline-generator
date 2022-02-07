@@ -1,17 +1,16 @@
 <script>
-  import ColorSelect from './ColorSelect.svelte';
-	import FileInput from './FileInput.svelte';
   import TimelineEvent from './TimelineEvent.svelte';
   import YearColumn from './YearColumn.svelte';
   import { events, dateData, sheetData } from "./stores";
-  import domtoimage from 'dom-to-image';
+
+  export let timelineNode = null;
 
   $: $events = $events.sort((a, b) => a[$sheetData.dateColumn] - b[$sheetData.dateColumn]);
 
   let sortedEvents = {
     unknown: [],
   };
-  $: if ($events) {
+  $: if ($events) { // Reset sorted events when $events changes to prevent duplication
     sortedEvents = {
       unknown: [],
     }
@@ -34,60 +33,28 @@
   $: $dateData.range = $dateData.end - $dateData.start + 1; // Plus one to include the end year
 
   $: allYears = Array.from(Array($dateData.range).keys()).map(year => year + $dateData.start);
-
-  let timelineNode;
 </script>
 
-<main>
-  <div class="timelineWrapper" bind:this={timelineNode}>
-    <div class="timeline">
-      {#if $events.length}
-        {#each allYears as year}
-          <YearColumn year={sortedEvents[year] ? year : null}>
-            {#if sortedEvents[year]}
-              {#each sortedEvents[year] as event}
-                <TimelineEvent {event} />
-              {/each}
-            {/if}
-          </YearColumn>
-        {/each}
-        <YearColumn year="Unknown">
-          {#each sortedEvents.unknown as event}
-            <TimelineEvent {event} />
-          {/each}
+<div class="timelineWrapper" bind:this={timelineNode}>
+  <div class="timeline">
+    {#if $events.length}
+      {#each allYears as year}
+        <YearColumn year={sortedEvents[year] ? year : null}>
+          {#if sortedEvents[year]}
+            {#each sortedEvents[year] as event}
+              <TimelineEvent {event} />
+            {/each}
+          {/if}
         </YearColumn>
-      {/if}
-    </div>
+      {/each}
+      <YearColumn year="Unknown">
+        {#each sortedEvents.unknown as event}
+          <TimelineEvent {event} />
+        {/each}
+      </YearColumn>
+    {/if}
   </div>
-</main>
-
-<div class="spacer"></div>
-
-<footer class="centerFlex">
-  <FileInput />
-  
-  <button on:click={() => {
-    domtoimage.toBlob(timelineNode)
-    .then(blob => {
-      const downloadLink = document.createElement('a');
-  
-      try {
-        // This fails when the image is too large
-        const url = window.URL.createObjectURL(blob);
-        downloadLink.href = url;
-        downloadLink.download = 'timeline.png';
-        downloadLink.click();
-        window.URL.revokeObjectURL(url);
-        downloadLink.remove();
-      }
-      catch (err) {
-        alert("Sorry, your timeline is too large to export as an image.");
-      }
-    });
-  }}>Export as png</button>
-
-  <ColorSelect />
-</footer>
+</div>
 
 <style>
   .timelineWrapper {
@@ -96,21 +63,5 @@
 
   .timeline {
     display: flex;
-  }
-
-  .spacer {
-    height: 6em;
-  }
-
-  footer {
-    color: #333;
-    position: fixed;
-    left: 0;
-    bottom: 0;
-    width: 100%;
-    padding: 2ch;
-    background: white;
-    box-shadow: 0 0 15px black;
-    gap: 2ch;
   }
 </style>

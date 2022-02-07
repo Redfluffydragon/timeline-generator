@@ -14,7 +14,7 @@
   let open = false;
   let badDateCol = false;
   let workbook;
-  let fileChosen = false;
+  export let fileChosen = false;
 
   $: columnHeaders = workbook ? Object.entries(XLSX.utils.sheet_to_json(workbook.Sheets[$sheetData.sheet])[0]) : [];
   // Object.entries(workbook.Sheets[$sheetData.sheet]).filter(cell => cell[0].match(/[A-Z]+1$/))
@@ -128,6 +128,7 @@
     </select>
 
     <br>
+    <br>
     <button on:click={e => {
       // If you return before the preventDefault, the built-in warning pops up
       if (!document.querySelector('#dateSelect').value || badDateCol) {
@@ -150,9 +151,9 @@
   />
 </form>
 
-<button on:click={() => {
-  fileChosen && (open = true);
-}}>Change columns</button>
+<button title={fileChosen ? 'Change the displayed columns' : 'Choose a file first'} disabled={!fileChosen} on:click={() => {
+  open = true;
+}}>Sheet options</button>
 
 <style>
   @media print {
