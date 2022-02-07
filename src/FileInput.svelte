@@ -65,6 +65,7 @@
   }
 </script>
 
+<!-- svelte-ignore missing-declaration -->
 <Modal bind:open on:close={() => {
   $events = XLSX.utils.sheet_to_json(workbook.Sheets[$sheetData.sheet]);
   }}>
