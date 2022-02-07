@@ -14,6 +14,7 @@
   let open = false;
   let badDateCol = false;
   let workbook;
+  let fileChosen = false;
 
   $: columnHeaders = workbook ? Object.entries(XLSX.utils.sheet_to_json(workbook.Sheets[$sheetData.sheet])[0]) : [];
   // Object.entries(workbook.Sheets[$sheetData.sheet]).filter(cell => cell[0].match(/[A-Z]+1$/))
@@ -60,6 +61,7 @@
 
     // Set to the first sheet so the select isn't blank
     $sheetData.sheet = workbook.SheetNames[0];
+    fileChosen = true;
 
     open = true;
   }
@@ -70,7 +72,7 @@
   $events = XLSX.utils.sheet_to_json(workbook.Sheets[$sheetData.sheet]);
   }}>
   <form>
-    <h1>Sheet info</h1>
+    <h1>Select columns</h1>
     <label for="sheetSelect">Select sheet</label>
     <select id="sheetSelect" bind:value={$sheetData.sheet}>
       {#each workbook.SheetNames as sheetName}
@@ -81,13 +83,15 @@
     <label for="dateSelect">Column for date *</label>
     <select id="dateSelect" required bind:value={$sheetData.dateColumn} on:input={e => {
       badDateCol = false;
+
+      // TODO make it work with dates and not just numbers
       let hasNumber = 0;
       for (const i of XLSX.utils.sheet_to_json(workbook.Sheets[$sheetData.sheet])) {
         if (!isNaN(i[e.target.value])) {
           hasNumber++;
         }
       }
-      if (hasNumber < 2) {
+      if (hasNumber < 2) { // Has to have at least two numbers for the range and everything to work
         badDateCol = true;
       }
       }}>
@@ -145,7 +149,7 @@
 </form>
 
 <button on:click={() => {
-  document.querySelector('#fileInput').files.length && (open = true);
+  fileChosen && (open = true);
 }}>Change columns</button>
 
 <style>
