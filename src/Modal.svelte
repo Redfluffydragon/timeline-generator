@@ -5,6 +5,7 @@
   export let open;
 
   export let required = false;
+  export let maxWidth = 'none';
 
   const dispatch = createEventDispatcher();
 
@@ -26,8 +27,12 @@
 </script>
 
 {#if open}
-  <div class="shadow" transition:fade={{ duration: 300 }}>
-    <div class="modal">
+  <div class="shadow" transition:fade={{ duration: 300 }} on:click={e => {
+    if (!required && !e.target.closest('.modal')) {
+      open = false;
+    }
+  }}>
+    <div class="modal" style="max-width: {maxWidth};">
       {#if !required}
         <button on:click="{() => { open = false; }}" title="Close modal" class="imgBtn closeBtn">
           <svg width="64" height="64" viewBox="0 0 64 64" fill="none">
