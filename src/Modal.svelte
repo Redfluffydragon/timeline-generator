@@ -4,12 +4,14 @@
 
   export let open;
 
+  export let required = false;
+
   const dispatch = createEventDispatcher();
 
   $: !open && dispatch('close');
 
   function escape(e) {
-    if (e.key === 'Escape') {
+    if (e.key === 'Escape' && !required) {
       open = false;
     }
   }
@@ -26,11 +28,13 @@
 {#if open}
   <div class="shadow" transition:fade={{ duration: 300 }}>
     <div class="modal">
-      <button on:click="{() => { open = false; }}" title="Close modal" class="imgBtn closeBtn">
-        <svg width="64" height="64" viewBox="0 0 64 64" fill="none">
-          <path d="M56 8L8 56M8 8L56 56" stroke-width="5" stroke="#333" />
-        </svg>
-      </button>
+      {#if !required}
+        <button on:click="{() => { open = false; }}" title="Close modal" class="imgBtn closeBtn">
+          <svg width="64" height="64" viewBox="0 0 64 64" fill="none">
+            <path d="M56 8L8 56M8 8L56 56" stroke-width="5" stroke="#333" />
+          </svg>
+        </button>
+      {/if}
       <slot></slot>
     </div>
   </div>
