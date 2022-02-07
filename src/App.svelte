@@ -30,5 +30,6 @@
     background: white;
     box-shadow: 0 0 15px black;
     gap: 2ch;
+		flex-wrap: wrap;
   }
 </style>
