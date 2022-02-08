@@ -1,6 +1,7 @@
 <script>
 	import Timeline from './Timeline.svelte';
 	import Inputs from './Inputs.svelte';
+	import Info from './Info.svelte';
 
 	let timelineNode;
 </script>
@@ -13,6 +14,7 @@
 
 <footer class="centerFlex">
 	<Inputs {timelineNode} />
+	<Info />
 </footer>
 
 <style>
